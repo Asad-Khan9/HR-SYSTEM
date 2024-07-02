@@ -10,7 +10,7 @@ from employee import employee_dashboard
 from manager import manager_dashboard
 from database import init_db
 #------------------------------
-st.set_page_config(page_title="HR Management System", page_icon=":shark:")
+st.set_page_config(page_title="HR Management System", page_icon=":shark:", layout="wide")
 
 if 'logged_in' not in st.session_state:
     st.session_state.logged_in = False
@@ -60,7 +60,7 @@ def main():
             </style>
         """, unsafe_allow_html=True)
         with st.sidebar:
-            st.image('login_image3.jpg')
+            st.image("./images/login_image3.jpg")
         choice = st.sidebar.radio("**Menu**", ["HR Login", "User Login", "User Signup"])
         
         if choice == "HR Login":
