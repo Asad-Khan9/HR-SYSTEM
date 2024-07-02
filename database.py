@@ -15,7 +15,7 @@ def init_db():
                   FOREIGN KEY (company_id) REFERENCES Companies(company_id))''')
     
     c.execute('''CREATE TABLE IF NOT EXISTS Users
-                 (user_id INTEGER PRIMARY KEY AUTOINCREMENT,
+                 (user_id INTEGER PRIMARY KEY AUTOINCREMENT,   
                   username TEXT NOT NULL UNIQUE,
                   password TEXT NOT NULL,
                   company_id INTEGER,
