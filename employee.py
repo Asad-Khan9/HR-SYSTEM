@@ -1,7 +1,7 @@
 import streamlit as st
 from helperfunctions import *
-
-
+from datetime import date, datetime
+import pandas as pd
 def employee_dashboard(username):
 
     if st.sidebar.button("Logout"):
@@ -15,8 +15,13 @@ def employee_dashboard(username):
     tab1, tab2, tab3 = st.tabs(["Vacation Leave Request","Absence Leave Request", "View Leave Status"])
     
     with tab1:
-        main_type = "VacationLeave"
-        st.header("Vacation Leave Request")
+        # today_date = str(date.today().strftime("%Y-%m-%d"))
+        today_date = str(date.today().strftime("%Y-%m-%d %A"))
+        main_type = "Vacation Leave"
+        left, right = st.columns(2, vertical_alignment="bottom")
+        left.header("Vacation Leave Request")
+        right.info(f"**{main_type} requesting on:** {today_date}")
+
         name = st.text_input("Name")
         employee_id = st.text_input("Employee ID")
         job_title = st.text_input("Job title")
@@ -30,8 +35,12 @@ def employee_dashboard(username):
             insert_employee_request(username, name, employee_id, job_title, str(leave_days), str(from_date), str(to_date), leave_type, reason, main_type)
             st.success("Request submitted successfully")
     with tab2:
-        main_type = "AbsenceLeave"
-        st.header("Absence Leave Request")
+        today_date = str(date.today().strftime("%Y-%m-%d %A"))
+        main_type = "Absence Leave"
+        left, right = st.columns(2, vertical_alignment="bottom")
+        left.header("Absence Leave Request")
+        right.info(f"**{main_type} requesting on:** {today_date}")
+
         name = st.text_input("Name ")
         employee_id = st.text_input("Employee ID ")
         job_title = st.text_input("Job title ")
@@ -55,15 +64,44 @@ def employee_dashboard(username):
         st.header("My Leave Requests")
         requests = fetch_all_employee_requests()
         my_requests = [req for req in requests if req[0] == username]
-        
+        my_requests.reverse()
+        # st.write(requests)
         if my_requests:
-            for req in my_requests:
+            for req in my_requests[:2]:
                 status = get_leave_status(req[2], req[5], req[6], req[7])
+                
                 st.write(f"**Request for {req[1]}**")
-                st.write(f"Main Type: {req[10]}")
+                st.write(f"Main Type: {req[9]}")
                 st.write(f"From: {req[5]} To: {req[6]}")
                 st.write(f"Type: {req[7]}")
-                st.write(f"**Status: {status if status else 'Pending'}**")
+                # st.write(f"**Status: {status if status else 'Pending'}**")
+
+                st.write(f"Reason: {req[8]}")
+
+                if(req[10] == "VacationLeave"):
+                    st.write(f"Leave Days: {req[4]}")
+
+                if(status == "Approve"):
+
+                    st.write("**:green-background[Status: :green[Approved]]**")
+                elif(status == "Reject"):
+                    st.write("**:red-background[Status: :red[Rejected]]**")
+                else:
+                    st.write("**:orange-background[Status: :orange[Pending]]**")
+
                 st.write("---")
         else:
             st.info("You haven't submitted any leave requests yet.")
+        st.write("**My leave requests history**")
+
+        columns = ["Username", "Name", "Employee ID", "Position", "Days Requested","Start Date",
+                   "End Date", "Leave Type", "Reason", "Request Type", "Leave Status"]
+
+        df = pd.DataFrame(my_requests, columns=columns)
+        
+        with st.expander("Click to see requests history"):
+            st.dataframe(df)
+        
+        
+        
+        
