@@ -5,8 +5,6 @@ import pandas as pd
 from datetime import date
 import streamlit_authenticator as stauth
 
-
-
 def hash_password(password):
     return hashlib.sha256(str.encode(password)).hexdigest()
 
@@ -95,22 +93,6 @@ def fetch_all_employee_requests():
     conn.close()
     return rows
 
-# def insert_leave_status(username, name, employee_id, leave_status):
-#     conn = sqlite3.connect('hr_system.db')
-#     c = conn.cursor()
-#     c.execute("INSERT INTO Leave_Status VALUES (?, ?, ?, ?)",
-#               (username, name, employee_id, leave_status))
-#     conn.commit()
-#     conn.close()
-
-# def get_leave_status(employee_id):
-#     conn = sqlite3.connect('hr_system.db')
-#     c = conn.cursor()
-#     c.execute("SELECT Leave_status FROM Leave_Status WHERE Employee_id = ?", (employee_id,))
-#     result = c.fetchone()
-#     conn.close()
-#     return result[0] if result else None
-
 def get_leave_status(employee_id, from_date, to_date, leave_type):
     conn = sqlite3.connect('hr_system.db')
     c = conn.cursor()
@@ -119,8 +101,6 @@ def get_leave_status(employee_id, from_date, to_date, leave_type):
     conn.close()
     return result[0] if result else None
 
-
-
 def insert_leave_status(username, name, employee_id, leave_status, from_date, to_date, leave_type):
     conn = sqlite3.connect('hr_system.db')
     c = conn.cursor()
@@ -128,3 +108,6 @@ def insert_leave_status(username, name, employee_id, leave_status, from_date, to
               (username, name, employee_id, leave_status, from_date, to_date, leave_type))
     conn.commit()
     conn.close()
+
+
+    
